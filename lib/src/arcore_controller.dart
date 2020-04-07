@@ -150,7 +150,7 @@ class ArCoreController {
 
   void _handlePositionChanged(ArCoreNode node) {
     _channel.invokeMethod<void>('positionChanged',
-        _getHandlerParams(node, convertVector3ToMap(node.position.value)));
+        {'name': node.name, 'position': node.position.value});
   }
 
   void _handleRotationChanged(ArCoreRotatingNode node) {

@@ -16,6 +16,7 @@ import com.difrancescogianmarco.arcore_flutter_plugin.flutter_models.FlutterArCo
 import com.difrancescogianmarco.arcore_flutter_plugin.flutter_models.FlutterArCorePose
 import com.difrancescogianmarco.arcore_flutter_plugin.models.RotatingNode
 import com.difrancescogianmarco.arcore_flutter_plugin.utils.ArCoreUtils
+import com.difrancescogianmarco.arcore_flutter_plugin.utils.DecodableUtils
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.google.ar.core.exceptions.UnavailableException
@@ -173,7 +174,7 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
             }
             "positionChanged" -> {
                 Log.i(TAG, " positionChanged")
-
+                updatePosition(call, result)
             }
             "rotationChanged" -> {
                 Log.i(TAG, " rotationChanged")
@@ -191,7 +192,7 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
                 loadMesh(textureBytes)
             }
             "dispose" -> {
-                Log.i(TAG, " updateMaterials")
+                Log.i(TAG, " dispose")
                 dispose()
             }
             else -> {
@@ -396,6 +397,18 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
         result.success(null)
     }
 
+    fun updatePosition(call: MethodCall, result: MethodChannel.Result) {
+        val name = call.argument<String>("name")
+        val node = arSceneView?.scene?.findByName(name)
+        Log.i(TAG, "node:  $node")
+        val position = call.argument<HashMap<String, *>>("position")
+        Log.i(TAG, "position:  $position")
+        if(node != null) {
+            node?.localPosition = DecodableUtils.parseVector3(position)
+        }
+        result.success(null)
+    }
+
     fun updateMaterials(call: MethodCall, result: MethodChannel.Result) {
         val name = call.argument<String>("name")
         val materials = call.argument<ArrayList<HashMap<String, *>>>("materials")!!
@@ -514,12 +527,5 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
             }
         }
 
-    }*/
-
-    /*    fun updatePosition(call: MethodCall, result: MethodChannel.Result) {
-        val name = call.argument<String>("name")
-        val node = arSceneView?.scene?.findByName(name)
-        node?.localPosition = parseVector3(call.arguments as HashMap<String, Any>)
-        result.success(null)
     }*/
 }
