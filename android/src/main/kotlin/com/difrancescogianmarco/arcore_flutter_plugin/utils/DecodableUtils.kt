@@ -18,12 +18,33 @@ class DecodableUtils {
             return null
         }
 
+        fun parseVector3(vector: List<Double>?): Vector3? {
+            if (vector != null) {
+                val x: Float = (vector[0] as Double).toFloat()
+                val y: Float = (vector[1] as Double).toFloat()
+                val z: Float = (vector[2] as Double).toFloat()
+                return Vector3(x, y, z)
+            }
+            return null
+        }
+
         fun parseQuaternion(vector: HashMap<String, Double>?): Quaternion? {
             if (vector != null) {
                 val x: Float = (vector["x"] as Double).toFloat()
                 val y: Float = (vector["y"] as Double).toFloat()
                 val z: Float = (vector["z"] as Double).toFloat()
                 val w: Float = (vector["w"] as Double).toFloat()
+                return Quaternion(x, y, z, w)
+            }
+            return null
+        }
+
+        fun parseQuaternion(vector: List<Double>?): Quaternion? {
+            if (vector != null) {
+                val x: Float = (vector[0] as Double).toFloat()
+                val y: Float = (vector[1] as Double).toFloat()
+                val z: Float = (vector[2] as Double).toFloat()
+                val w: Float = (vector[3] as Double).toFloat()
                 return Quaternion(x, y, z, w)
             }
             return null

@@ -156,33 +156,32 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
                 arScenViewInit(call, result, activity)
             }
             "addArCoreNode" -> {
-                Log.i(TAG, " addArCoreNode")
+                Log.i(TAG, "onMethodCall addArCoreNode")
                 val map = call.arguments as HashMap<String, Any>
                 val flutterNode = FlutterArCoreNode(map);
                 onAddNode(flutterNode, result)
             }
             "addArCoreNodeWithAnchor" -> {
-                Log.i(TAG, " addArCoreNode")
+                Log.i(TAG, "onMethodCall addArCoreNode")
                 val map = call.arguments as HashMap<String, Any>
                 val flutterNode = FlutterArCoreNode(map)
                 addNodeWithAnchor(flutterNode, result)
             }
             "removeARCoreNode" -> {
-                Log.i(TAG, " removeARCoreNode")
+                Log.i(TAG, "onMethodCall removeARCoreNode")
                 val map = call.arguments as HashMap<String, Any>
                 removeNode(map["nodeName"] as String, result)
             }
             "positionChanged" -> {
-                Log.i(TAG, " positionChanged")
+                Log.i(TAG, "onMethodCall positionChanged")
                 updatePosition(call, result)
             }
             "rotationChanged" -> {
-                Log.i(TAG, " rotationChanged")
+                Log.i(TAG, "onMethodCall rotationChanged")
                 updateRotation(call, result)
-
             }
             "updateMaterials" -> {
-                Log.i(TAG, " updateMaterials")
+                Log.i(TAG, "onMethodCall updateMaterials")
                 updateMaterials(call, result)
 
             }
@@ -192,7 +191,7 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
                 loadMesh(textureBytes)
             }
             "dispose" -> {
-                Log.i(TAG, " dispose")
+                Log.i(TAG, "onMethodCall dispose")
                 dispose()
             }
             else -> {
@@ -399,9 +398,11 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
 
     fun updatePosition(call: MethodCall, result: MethodChannel.Result) {
         val name = call.argument<String>("name")
+        Log.i(TAG, "name:  $name")
         val node = arSceneView?.scene?.findByName(name)
         Log.i(TAG, "node:  $node")
-        val position = call.argument<HashMap<String, *>>("position")
+        val position = call.argument<List<Double>>("position")
+//        val position = call.argument<HashMap<String, *>>("position")
         Log.i(TAG, "position:  $position")
         if(node != null) {
             node?.localPosition = DecodableUtils.parseVector3(position)

@@ -49,7 +49,7 @@ class _ArCoreViewState extends State<ArCoreView> with WidgetsBindingObserver {
     }
     return Center(
       child: Text(
-          '$defaultTargetPlatform is not  supported by the ar_view plugin'),
+          '$defaultTargetPlatform is not supported by the ar_view plugin'),
     );
   }
 

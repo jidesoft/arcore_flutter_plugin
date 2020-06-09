@@ -15,11 +15,9 @@ class FlutterArCoreNode(map: HashMap<String, *>) {
     val objectUrl: String? = map["objectUrl"] as? String
     val object3DFileName: String? = map["object3DFileName"] as? String
     val shape: FlutterArCoreShape? = getShape(map["shape"] as? HashMap<String, *>)
-    val position: Vector3 = parseVector3(map["position"] as? HashMap<String, *>) ?: Vector3()
-    val scale: Vector3 = parseVector3(map["scale"] as? HashMap<String, *>)
-            ?: Vector3(1.0F, 1.0F, 1.0F)
-    val rotation: Quaternion = parseQuaternion(map["rotation"] as? HashMap<String, Double>)
-            ?: Quaternion()
+    val position: Vector3 = parseVector3(map["position"] as? List<Double>) ?: Vector3()
+    val scale: Vector3 = parseVector3(map["scale"] as? List<Double>) ?: Vector3(1.0F, 1.0F, 1.0F)
+    val rotation: Quaternion = parseQuaternion(map["rotation"] as? List<Double>) ?: Quaternion()
     val degreesPerSecond: Float? = getDegreesPerSecond((map["degreesPerSecond"] as? Double))
     var parentNodeName: String? = map["parentNodeName"] as? String
 
@@ -74,7 +72,7 @@ class FlutterArCoreNode(map: HashMap<String, *>) {
     override fun toString(): String {
         return "dartType: $dartType\n" +
                 "name: $name\n" +
-                "shape: ${shape.toString()}\n" +
+                "shape: [${shape.toString()}]\n" +
                 "object3DFileName: $object3DFileName \n" +
                 "objectUrl: $objectUrl \n" +
                 "position: $position\n" +

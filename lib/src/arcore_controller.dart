@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:arcore_flutter_plugin/src/arcore_augmented_image.dart';
 import 'package:arcore_flutter_plugin/src/arcore_rotating_node.dart';
 import 'package:arcore_flutter_plugin/src/utils/vector_utils.dart';
+import 'package:arcore_flutter_plugin/src/utils/json_converters.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'arcore_hit_test_result.dart';
@@ -18,6 +19,10 @@ typedef ArCoreAugmentedImageTrackingHandler = void Function(
     ArCoreAugmentedImage);
 
 const UTILS_CHANNEL_NAME = 'arcore_flutter_plugin/utils';
+
+const _vector3Converter = Vector3Converter();
+const _vector4Converter = Vector4Converter();
+const _matrixConverter = MatrixConverter();
 
 class ArCoreController {
   static checkArCoreAvailability() async {
@@ -149,8 +154,10 @@ class ArCoreController {
   }
 
   void _handlePositionChanged(ArCoreNode node) {
-    _channel.invokeMethod<void>('positionChanged',
-        {'name': node.name, 'position': node.position.value});
+    _channel.invokeMethod<void>(
+        'positionChanged',
+        _getHandlerParams(
+            node, 'position', _vector3Converter.toJson(node.position.value)));
   }
 
   void _handleRotationChanged(ArCoreRotatingNode node) {
@@ -160,13 +167,20 @@ class ArCoreController {
 
   void _updateMaterials(ArCoreNode node) {
     _channel.invokeMethod<void>(
-        'updateMaterials', _getHandlerParams(node, node.shape.toMap()));
+        'updateMaterials', _getHandlerParamsOld(node, node.shape.toMap()));
   }
 
-  Map<String, dynamic> _getHandlerParams(
+  Map<String, dynamic> _getHandlerParamsOld(
       ArCoreNode node, Map<String, dynamic> params) {
     final Map<String, dynamic> values = <String, dynamic>{'name': node.name}
       ..addAll(params);
+    return values;
+  }
+
+  Map<String, dynamic> _getHandlerParams(
+      ArCoreNode node, String paramName, dynamic params) {
+    final Map<String, dynamic> values = <String, dynamic>{'name': node.name}
+      ..addAll({paramName: params});
     return values;
   }
 
